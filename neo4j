@@ -1,0 +1,11 @@
+check process neo4j
+  matching "neo4j"
+  start program "/bin/systemctl start neo4j"
+  stop program "/bin/systemctl stop neo4j"
+  if failed
+    port 7474
+    protocol http
+    with http headers [Authorization: Basic neo4j:]
+    and request "/db/data/schema/index"
+    with status != 200
+ then restart
